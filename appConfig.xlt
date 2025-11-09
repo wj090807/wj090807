@@ -1,11 +1,11 @@
 {
-	"appName": "易诺网络平台",
-	"appPackageName": "top.webcat.app976858",
+	"appName": "易诺云商城",
+	"appPackageName": "top.webcat.app717845",
 	"appVersionName": "1.0",
 	"appVersionCode": 100000,
 	"data": {		
 		"启用顶栏": true,
-		"顶栏标题": "易诺网络平台",
+		"顶栏标题": "易诺云商城",
 		"顶栏颜色": "#000000",
 		"横屏": false,
 		"显示状态栏": true,
