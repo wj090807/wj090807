@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+ <html lang="zh-CN">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>导航网管理系统</title>
+     <style>
+         /* 基础样式 */
+         * {
+             margin: 0;
+             padding: 0;
+             box-sizing: border-box;
+             font-family: "Microsoft YaHei", sans-serif;
+         }
+         body {
+             background-color: #f5f5f5;
+         }
+         .header {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             padding: 15px 20px;
+             background-color: white;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+         }
+         .logo {
+             width: 60px;
+             height: 60px;
+             border-radius: 8px;
+             overflow: hidden;
+         }
+         .nav-info {
+             flex: 1;
+             margin-left: 15px;
+         }
+         .nav-title {
+             font-size: 20px;
+             font-weight: bold;
+             color: #333;
+         }
+         .nav-address {
+             font-size: 14px;
+             color: #666;
+         }
+         .admin-btn {
+             background-color: #000;
+             color: white;
+             border: none;
+             padding: 8px 15px;
+             border-radius: 5px;
+             cursor: pointer;
+         }
+         /* 用户界面样式 */
+         .user-content {
+             padding: 20px;
+         }
+         .banner {
+             width: 100%;
+             height: 200px;
+             margin: 20px 0;
+             overflow: hidden;
+         }
+         .banner img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
+         }
+         .content-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+             gap: 20px;
+         }
+         .content-item {
+             background-color: white;
+             padding: 15px;
+             border-radius: 8px;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+             text-align: center;
+         }
+         .content-item img {
+             width: 100px;
+             height: 100px;
+             border-radius: 50%;
+             margin-bottom: 10px;
+         }
+         /* 管理弹窗样式 */
+         .admin-overlay {
+             position: fixed;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             background: rgba(0,0,0,0.8);
+             display: none;
+             justify-content: center;
+             align-items: center;
+             z-index: 1000;
+         }
+         .admin-modal {
+             background-color: white;
+             padding: 20px;
+             border-radius: 8px;
+             width: 90%;
+             max-width: 800px;
+             position: relative;
+         }
+         .close-btn {
+             position: absolute;
+             top: 10px;
+             right: 10px;
+             background: none;
+             border: none;
+             font-size: 24px;
+             cursor: pointer;
+             color: #666;
+         }
+         .admin-form {
+             display: grid;
+             grid-template-columns: repeat(2, 1fr);
+             gap: 20px;
+             margin-bottom: 20px;
+         }
+         .form-group {
+             margin-bottom: 15px;
+         }
+         .form-group label {
+             display: block;
+             margin-bottom: 5px;
+         }
+         .form-group input, .form-group textarea {
+             width: 100%;
+             padding: 8px;
+             border: 1px solid #ddd;
+             border-radius: 4px;
+         }
+         .save-btn {
+             background-color: #000;
+             color: white;
+             border: none;
+             padding: 10px 20px;
+             border-radius: 4px;
+             cursor: pointer;
+             grid-column: span 2;
+         }
+     </style>
+ </head>
+ <body>
+     <!-- 用户界面 -->
+     <div class="user-content">
+         <div class="header">
+             <div class="logo">
+                 <img src="https://via.placeholder.com/60" alt="LOGO" id="userLogo">
+             </div>
+             <div class="nav-info">
+                 <div class="nav-title" id="userNavTitle">导航名称</div>
+                 <div class="nav-address" id="userNavAddress">永久地址：示例地址</div>
+             </div>
+             <button class="admin-btn" onclick="showLoginModal()">管理员登录</button>
+         </div>
+         <div class="banner">
+             <img src="https://via.placeholder.com/1200x200" alt="Banner" id="userBanner">
+         </div>
+         <div class="content-grid" id="userContent">
+             <div class="content-item" data-id="1">
+                 <img src="https://via.placeholder.com/100" alt="项目1" class="item-img">
+                 <h3 class="item-title">项目名称1</h3>
+                 <p class="item-desc">项目描述 示例内容</p>
+                 <a href="#" class="download-btn">立即下载</a>
+             </div>
+             <div class="content-item" data-id="2">
+                 <img src="https://via.placeholder.com/100" alt="项目2" class="item-img">
+                 <h3 class="item-title">项目名称2</h3>
+                 <p class="item-desc">项目描述 示例内容</p>
+                 <a href="#" class="download-btn">立即下载</a>
+             </div>
+         </div>
+     </div>
+     <!-- 登录弹窗 -->
+     <div class="admin-overlay" id="loginOverlay">
+         <div class="admin-modal">
+             <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+             <h2>管理员登录</h2>
+             <div class="admin-form">
+                 <div class="form-group">
+                     <label>用户名</label>
+                     <input type="text" id="adminUsername">
+                 </div>
+                 <div class="form-group">
+                     <label>密码</label>
+                     <input type="password" id="adminPassword">
+                 </div>
+             </div>
+             <button class="save-btn" onclick="handleLogin()">登录</button>
+             <p id="loginError" style="color: red; text-align: center;"></p>
+         </div>
+     </div>
+     <!-- 管理弹窗 -->
+     <div class="admin-overlay" id="adminOverlay">
+         <div class="admin-modal">
+             <button class="close-btn" onclick="closeAdminPanel()">&times;</button>
+             <h2>系统管理</h2>
+             
+             <!-- 基础设置 -->
+             <div class="admin-form">
+                 <div class="form-group">
+                     <label>导航名称</label>
+                     <input type="text" id="editNavTitle" value="导航名称">
+                 </div>
+                 <div class="form-group">
+                     <label>LOGO图片</label>
+                     <input type="text" id="editLogo" value="https://via.placeholder.com/60">
+                 </div>
+                 <div class="form-group">
+                     <label>Banner图片</label>
+                     <input type="text" id="editBanner" value="https://via.placeholder.com/1200x200">
+                 </div>
+                 <div class="form-group">
+                     <label>永久地址</label>
+                     <input type="text" id="editAddress" value="示例地址">
+                 </div>
+             </div>
+             <!-- 项目管理 -->
+             <h3>项目管理</h3>
+             <div class="admin-form">
+                 <div class="form-group" data-id="1">
+                     <label>项目1标题</label>
+                     <input type="text" class="item-title-input" value="项目名称1">
+                 </div>
+                 <div class="form-group" data-id="1">
+                     <label>项目1描述</label>
+                     <textarea class="item-desc-input" rows="3">项目描述 示例内容</textarea>
+                 </div>
+                 <div class="form-group" data-id="1">
+                     <label>项目1图片</label>
+                     <input type="text" class="item-img-input" value="https://via.placeholder.com/100">
+                 </div>
+                 <div class="form-group" data-id="2">
+                     <label>项目2标题</label>
+                     <input type="text" class="item-title-input" value="项目名称2">
+                 </div>
+                 <div class="form-group" data-id="2">
+                     <label>项目2描述</label>
+                     <textarea class="item-desc-input" rows="3">项目描述 示例内容</textarea>
+                 </div>
+                 <div class="form-group" data-id="2">
+                     <label>项目2图片</label>
+                     <input type="text" class="item-img-input" value="https://via.placeholder.com/100">
+                 </div>
+             </div>
+             <button class="save-btn" onclick="saveAllChanges()">保存所有修改</button>
+         </div>
+     </div>
+     <script>
+         // 管理员凭证
+         const ADMIN_USER = 'kk69000';
+         const ADMIN_PWD = 'kk69000';
+         // 界面控制
+         function showLoginModal() {
+             document.getElementById('loginOverlay').style.display = 'flex';
+         }
+         function closeLoginModal() {
+             document.getElementById('loginOverlay').style.display = 'none';
+             document.getElementById('adminOverlay').style.display = 'none';
+         }
+         function showAdminPanel() {
+             document.getElementById('adminOverlay').style.display = 'flex';
+             loadCurrentData();
+         }
+         function closeAdminPanel() {
+             document.getElementById('adminOverlay').style.display = 'none';
+         }
+         // 登录验证
+         function handleLogin() {
+             const username = document.getElementById('adminUsername').value;
+             const password = document.getElementById('adminPassword').value;
+             const errorElement = document.getElementById('loginError');
+             if (username === ADMIN_USER && password === ADMIN_PWD) {
+                 showAdminPanel();
+                 closeLoginModal();
+                 errorElement.textContent = '';
+             } else {
+                 errorElement.textContent = '用户名或密码错误';
+             }
+         }
+         // 加载当前数据到表单
+         function loadCurrentData() {
+             // 基础设置
+             document.getElementById('editNavTitle').value = 
+                 document.getElementById('userNavTitle').textContent;
+             document.getElementById('editLogo').value = 
+                 document.getElementById('userLogo').src;
+             document.getElementById('editBanner').value = 
+                 document.getElementById('userBanner').src;
+             document.getElementById('editAddress').value = 
+                 document.getElementById('userNavAddress').textContent.split('：')[1];
+             // 项目数据
+             const items = document.querySelectorAll('.content-item');
+             items.forEach((item, index) => {
+                 const group = document.querySelector(`.form-group[data-id="${index+1}"]`);
+                 group.querySelector('.item-title-input').value =
+                 item.querySelector('.item-title').textContent;
+                 group.querySelector('.item-desc-input').value = 
+                     item.querySelector('.item-desc').textContent;
+                 group.querySelector('.item-img-input').value = 
+                     item.querySelector('.item-img').src;
+             });
+         }
+         // 保存所有修改
+         function saveAllChanges() {
+             // 更新基础设置
+             document.getElementById('userNavTitle').textContent = 
+                 document.getElementById('editNavTitle').value;
+             document.getElementById('userLogo').src = 
+                 document.getElementById('editLogo').value;
+             document.getElementById('userBanner').src = 
+                 document.getElementById('editBanner').value;
+             document.getElementById('userNavAddress').textContent = 
+                 `永久地址：${document.getElementById('editAddress').value}`;
+             // 更新项目数据
+             const items = document.querySelectorAll('.content-item');
+             items.forEach((item, index) => {
+                 const group = document.querySelector(`.form-group[data-id="${index+1}"]`);
+                 item.querySelector('.item-title').textContent = 
+                     group.querySelector('.item-title-input').value;
+                 item.querySelector('.item-desc').textContent = 
+                     group.querySelector('.item-desc-input').value;
+                 item.querySelector('.item-img').src = 
+                     group.querySelector('.item-img-input').value;
+             });
+             closeAdminPanel();
+             alert('所有修改已保存');
+         }
+     </script>
+   </body>
+   </html>
+     
+     
