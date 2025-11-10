@@ -1,159 +1,270 @@
 <!DOCTYPE html>
- <html lang="zh-CN">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>易诺网络导航</title>
-     <style>
-         * {
-             margin: 0;
-             padding: 0;
-             box-sizing: border-box;
-             font-family: "Microsoft YaHei", sans-serif;
-         }
-         body {
-             background-color: #fff;
-         }
-         .header {
-             display: flex;
-             align-items: center;
-             padding: 15px 20px;
-             background-color: #fff;
-             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-         }
-         .logo {
-             width: 60px;
-             height: 60px;
-             border-radius: 8px;
-             overflow: hidden;
-             margin-right: 15px;
-         }
-         .logo img {
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-         }
-         .nav-info {
-             flex: 1;
-         }
-         .nav-title {
-             font-size: 20px;
-             font-weight: bold;
-             color: #333;
-         }
-         .nav-address {
-             font-size: 14px;
-             color: #666;
-         }
-         .share-btn {
-             background-color: #000;
-             color: #fff;
-             border: none;
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>官方导航网站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #fff;
+            position: relative;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        /* 弹窗公告样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #000;
+            max-width: 80%;
+            min-width: 200px;
+            position: relative;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #000;
+        }
+        .modal-message {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .modal-message p {
+            margin-bottom: 8px;
+        }
+        .modal-message ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .modal-message li {
+            margin-bottom: 5px;
+        }
+        .modal-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .modal-cs {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .modal-date {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .modal-close {
+            width: 100%;
+            padding: 8px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        /* 导航主体样式 */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            background-color: #fff;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .nav-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+        }
+        .nav-address {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            margin-top: 3px;
+        }
+        .share-btn {
+            background: linear-gradient(to right, #333, #000);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .share-btn:hover {
+            background: linear-gradient(to right, #444, #111);
+        }
+        .share-btn:hover::after {
+            content: "请替换为您的分享链接";
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .share-btn svg {
+            margin-right: 8px;
+        }
+        .carousel {
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 长方形飘字公告栏样式 */
+        .announcement-bar {
+            display: flex;
+            align-items: center;
+            background: #000;
+             border: 1px solid #000;
              padding: 8px 15px;
-             border-radius: 5px;
-             cursor: pointer;
-             display: flex;
-             align-items: center;
+             margin-bottom: 10px;
+             border-radius: 8px;
          }
-         .share-btn svg {
-             margin-right: 5px;
-         }
-         /* 轮播图样式 */
-         .banner {
-             width: 100%;
-             height: 300px; /* 调整为16:9比例，如宽度100%时，高度设为56.25%（例：宽度600px时，高度337.5px） */
+         .notice-icon {
+             width: 24px;
+             height: 24px;
+             margin-right: 10px;
+             border-radius: 4px;
              overflow: hidden;
-             position: relative;
          }
-         .banner .slides {
-             display: flex;
-             transition: transform 0.5s ease-in-out;
-         }
-         .banner .slide {
-             min-width: 100%;
-         }
-         .banner img {
+         .notice-icon img {
              width: 100%;
              height: 100%;
              object-fit: cover;
          }
-         .banner .controls {
-             position: absolute;
-             bottom: 10px;
-             left: 50%;
-             transform: translateX(-50%);
-             display: flex;
-             gap: 8px;
-         }
-         .banner .control {
-             width: 12px;
-             height: 12px;
-             border-radius: 50%;
-             background-color: rgba(255, 255, 255, 0.5);
-             cursor: pointer;
-         }
-         .banner .control.active {
-             background-color: #fff;
-         }
-         .audio-bar {
-             background-color: #000;
-             color: #fff;
-             padding: 10px 20px;
-             display: flex;
-             align-items: center;
+         .announcement-text {
+             flex: 1;
              overflow: hidden;
          }
-         .audio-bar svg {
-             margin-right: 10px;
-         }
-         .audio-text {
-             font-size: 14px;
+         .announcement-text span {
+             display: block;
              white-space: nowrap;
-             animation: scroll 15s linear infinite;
+             animation: marquee 8s linear infinite;
+             padding-left: 100%;
+             color: #fff;
          }
-         @keyframes scroll {
-             0% { transform: translateX(100%); }
+         @keyframes marquee {
+             0% { transform: translateX(0); }
              100% { transform: translateX(-100%); }
          }
          .nav-tabs {
              display: flex;
-             padding: 15px 20px;
+             gap: 8px;
+             padding: 10px 0;
              background-color: #fff;
-             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+             margin-bottom: 10px;
          }
          .tab-btn {
-             flex: 1;
-             padding: 8px 15px;
-             border-radius: 5px;
-             text-align: center;
+             padding: 8px 12px;
+             border-radius: 4px;
              cursor: pointer;
+             font-size: 14px;
+             border: 1px solid #000;
+             flex: 1;
+             text-align: center;
+             background: #fff;
+             color: #000;
+             transition: all 0.3s ease;
          }
          .tab-btn.active {
-             background-color: #000;
+             background: #000;
              color: #fff;
-         }
-         .tab-btn:not(.active) {
-             border: 1px solid #000;
-             color: #000;
+             border-color: #000;
          }
          .content-list {
-             padding: 15px;
+             padding: 10px;
+             background-color: #fff;
+             margin-bottom: 15px;
          }
          .list-item {
              display: flex;
              align-items: center;
-             background-color: #f9f9f9;
-             border-radius: 8px;
-             padding: 15px;
-             margin-bottom: 15px;
-             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+             padding: 12px;
+             margin-bottom: 10px;
+             border-radius: 10px;
+             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+             background-color: #fff;
          }
          .item-logo {
-             width: 80px;
-             height: 80px;
-             border-radius: 8px;
+             width: 60px;
+             height: 60px;
+             border-radius: 6px;
              overflow: hidden;
-             margin-right: 15px;
+             margin-right: 12px;
          }
          .item-logo img {
              width: 100%;
@@ -164,281 +275,529 @@
              flex: 1;
          }
          .item-title {
-             font-size: 18px;
+             font-size: 16px;
              font-weight: bold;
-             color: #333;
-             margin-bottom: 5px;
+             color: #000;
          }
          .item-desc {
-             font-size: 14px;
+             font-size: 13px;
              color: #666;
+             margin-top: 3px;
          }
-         .download-btn {
-             background-color: #000;
+         .visit-btn {
+             background: linear-gradient(to right, #333, #000);
              color: #fff;
              border: none;
-             padding: 8px 15px;
-             border-radius: 5px;
+             padding: 6px 12px;
+             border-radius: 18px;
              cursor: pointer;
+             font-size: 13px;
              display: flex;
              align-items: center;
+             transition: all 0.3s ease;
+             position: relative;
          }
-         .download-btn svg {
+         .visit-btn:hover {
+             background: linear-gradient(to right, #444, #111);
+         }
+         .visit-btn:hover::after {
+             content: "请替换为您的访问链接";
+             position: absolute;
+             top: 100%;
+             left: 0;
+             background: #333;
+             color: #fff;
+             padding: 5px 10px;
+             border-radius: 4px;
+             font-size: 12px;
+             white-space: nowrap;
+             z-index: 10;
+         }
+         .visit-btn svg {
              margin-left: 5px;
+             width: 12px;
+             height: 12px;
          }
-         .tab-content {
+         .footer {
+             text-align: center;
+             padding: 8px;
+             font-size: 13px;
+             color: #666;
+         }
+         /* 微信客服弹窗样式 */
+         .customer-modal {
+             position: fixed;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             width: 90%;
+             max-width: 350px;
+             background: #fff;
+             border-radius: 12px;
+             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
              display: none;
+             z-index: 9999;
          }
-         .tab-content.active {
-             display: block;
+         .modal-header {
+             padding: 15px;
+             border-bottom: 1px solid #f0f0f0;
+         }
+         .modal-title {
+             font-size: 16px;
+             font-weight: bold;
+             color: #333;
+             text-align: center;
+         }
+         .close-btn {
+             position: absolute;
+             top: 15px;
+             right: 15px;
+             width: 24px;
+             height: 24px;
+             background: #f4f4f4;
+             border-radius: 50%;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             cursor: pointer;
+         }
+         .close-btn::after {
+             content: '×';
+             font-size: 18px;
+             color: #666;
+         }
+         .modal-content {
+             padding: 20px 15px;
+         }
+         .service-block {
+             margin-bottom: 15px;
+             padding: 12px;
+             border-radius: 8px;
+             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+             transition: transform 0.3s ease;
+         }
+         .service-block:hover {
+             transform: translateY(-2px);
+         }
+         .service-content {
+             display: flex;
+             align-items: center;
+             gap: 15px;
+         }
+         .service-icon {
+             width: 40px;
+             height: 40px;
+             border-radius: 8px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             font-size: 20px;
+             background-color: #4cd964;
+             color: #fff;
+         }
+         .wechat-icon {
+             background-color: #4cd964;
+         }
+         .download-icon {
+             background-color: #4cd964;
+         }
+         .service-text {
+             flex: 1;
+         }
+         .service-title {
+             font-size: 14px;
+             font-weight: bold;
+             margin-bottom: 5px;
+         }
+         .service-desc {
+             font-size: 12px;
+             color: #666;
+             margin-bottom: 8px;
+         }
+         .copy-btn {
+             background: #000;
+             color: #fff;
+             border: none;
+             padding: 5px 10px;
+             border-radius: 4px;
+             font-size: 12px;
+             cursor: pointer;
+             float: right;
          }
      </style>
  </head>
  <body>
-     <div class="header">
-         <!-- 【图片提示】：替换为你的LOGO图片链接 -->
-         <div class="logo">
-             <img src="https://via.placeholder.com/60" alt="LOGO">
+     <div class="container">
+         <!-- 弹窗公告 -->
+         <div class="modal-overlay" id="announcementModal">
+             <div class="modal-content">
+                 <h2 class="modal-title">重要通知</h2>
+                 <div class="modal-message">
+                     <p>尊敬的用户：</p>
+                     <p>苹果微信分身教程</p>
+                     <ul>
+                         <li>❶下载TestFlight</li>
+                         <li>❷下载微信【微信分身】</li>
+                         <li>❸兑换码需商城购买</li>
+                         <li>❹注意:商城内微信分身外部对应产品名称</li>
+                     </ul>
+                 </div>
+                 <div class="modal-footer">
+                     <div class="modal-cs">易诺客服</div>
+                     <div class="modal-date">2025年11月9日00:00</div>
+                     <button class="modal-close" onclick="closeAnnouncement()">我已知晓</button>
+                 </div>
+             </div>
          </div>
-         <div class="nav-info">
-             <!-- 【导航名称】：已改为“易诺网络” -->
-             <div class="nav-title">易诺网络</div>
-             <div class="nav-address">永久地址：示例地址</div>
+         <!-- 导航主体内容 -->
+         <div class="header">
+             <div class="logo-area">
+                 <div class="logo">
+                     <img src="https://cccimg.com/view.php/37a5632088900e675a7ad86b88496251.png" alt="易诺导航LOGO">
+                 </div>
+                 <div class="nav-info">
+                     <div class="nav-title">易诺导航</div>
+                     <div class="nav-address">永久地址：Svip50.cn</div>
+                 </div>
+             </div>
+             <button class="share-btn" onclick="window.location.href='https://Svip50.cn'">
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                     <polyline points="15 3 21 3 21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                     <line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 分享导航
+             </button>
          </div>
-         <!-- 【链接提示】：替换为分享导航的目标链接 -->
-         <button class="share-btn">
-             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 <polyline points="15 3 21 3 21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 <line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-             </svg>
-             分享导航
-         </button>
+         <!-- 轮播图 -->
+         <div class="carousel">
+             <div class="carousel-container">
+                 <div class="carousel-item">
+                     <a href="https://你的广告链接1.com" target="_blank">
+                         <img src="https://cccimg.com/view.php/c31b82542a27434d011bb6a7a87f2320.jpg" alt="广告图片1">
+                     </a>
+                 </div>
+                 
+             </div>
+         </div>
+         <!-- 长方形飘字公告栏 -->
+         <div class="announcement-bar">
+             <div class="notice-icon">
+                 <!-- 此处替换为您的通知图标链接 -->
+                 <img src="https://cccimg.com/view.php/b7b4cb00a829e1ac8f7f6dc914da81d8.jpg" alt="通知图标">
+             </div>
+             <div class="announcement-text">
+                 <span>全网最低价拿货商城城招合作伙伴！</span>
+             </div>
+         </div>
+         <div class="nav-tabs">
+             <div class="tab-btn active">商城入口</div>
+             <div class="tab-btn">微信下载</div>
+             <div class="tab-btn">使用教程</div>
+         </div>
+         <div class="content-list">
+             <!-- 易诺云商城 -->
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/37a5632088900e675a7ad86b88496251.png" alt="易诺云商城LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>易诺云商城-货源站</h5></div>
+                     <div class="item-desc"><h6>全网最低价拿货商城招合作伙伴</h6></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='https://vip.lgsc.cc/'">
+                     立即访问
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+             <!-- QQ福利群 -->
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/d52a78d14a71feb249778f597abee6ca.jpg" alt="征途LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>QQ福利群</h5></div>
+                     <div class="item-desc"><h5></h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=K1Q5hLKFmsnQVWdnm5Kk5PEoai2pnAAg&authKey=AuMe%2BsJcrOntNShTBOLSxxDU31OOWyaVKFxIbRgtB4T2PAL95E0k%2BCmYi8Dif3KL&noverify=0&group_code=759674693'">
+                     立即访问
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+             <!-- 商业视频区域 -->
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/436212b7b347a29153e05b06cfc9ce36.jpg" alt="超凡LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>在线客服</h5></div>
+                     <div class="item-desc"><h5></h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='https://www.kdocs.cn/l/cgPrbonQbSuN'">
+                     立即访问
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+         <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/c7b67f91260d9402230ffedbe79e78e8.jpg" alt="超凡LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>使用教程</h5></div>
+                     <div class="item-desc"><h5></h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='https://www.kdocs.cn/l/cgPrbonQbSuN'">
+                     立即访问
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+         </div>
+         <!-- 免费下载内容 -->
+         <div class="content-list" style="display: none;" id="tab2">
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/e18adcd0a1a810a5b0b7a5eb45764e3c.png" alt="TestFlightLOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>❶TestFlight下载</h5></div>
+                     <div class="item-desc"><h5>安装TestFlinght</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='https://testflight.apple.com'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/9281adeff755d2eacaa55182fb44f50c.png" alt="微信分身LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>❷微信下载</h5></div>
+                     <div class="item-desc"><h5>下载微信分身</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://154.36.161.59:8124/'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+             
+             <!-- 新增区块链条目 -->
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/9281adeff755d2eacaa55182fb44f50c.png" alt="区块链LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>➌微信下载</h5></div>
+                     <div class="item-desc"><h5>下载微信分身</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://192.140.161.27:66/'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+                 
+             </div>
+         <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/9281adeff755d2eacaa55182fb44f50c.png" alt="区块链项目3LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>❹微信下载</h5></div>
+                     <div class="item-desc"><h5>下载微信分身</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://160.202.244.20:12345/1/redeem/iakJeg'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/9281adeff755d2eacaa55182fb44f50c.png" alt="区块链项目4LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>❺微信下载</h5></div>
+                     <div class="item-desc"><h5>下载微信分身</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://160.202.244.20:12345/1/redeem/iakJeg'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+                 
+             </div>
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/9281adeff755d2eacaa55182fb44f50c.png" alt="区块链项目4LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>❻微信下载</h5></div>
+                     <div class="item-desc"><h5>下载微信分身</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://192.140.161.27:66/'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+         <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/9281adeff755d2eacaa55182fb44f50c.png" alt="超凡LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>❼微信下载</h5></div>
+                     <div class="item-desc"><h5>下载微信分身</h5></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='https://www.kdocs.cn/l/cgPrbonQbSuN'">
+                     立即下载
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </button>
+             </div>
+             </div>
+       <!-- 使用教程内容 -->
+       <div class="list-item">
+         <div class="content-list" style="display: none;" id="tab3">
+             <div class="list-item">
+                 <div class="item-logo">
+                     <img src="https://cccimg.com/view.php/5119d0b73ce61ae72d54f8e359b0c62e.jpg" alt="区块链项目3LOGO">
+                 </div>
+                 <div class="item-info">
+                     <div class="item-title"><h5>使用教程</h5></div>
+                     <div class="item-desc"><h6></h6></div>
+                 </div>
+                 <button class="visit-btn" onclick="window.location.href='http://160.202.244.20:12345/1/redeem/iakJeg'">
+                     立即前往
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
+                     </svg>
+                 </but
+                 </button>
+                 </div>
+                 
+         <div class="footer">
+             <p>© 2025 易诺导航版权所有 保留一切权利</p>
+             <p>备案号:0869425500</p>
+         </div>
      </div>
-     <!-- 轮播图区域（支持多张图片轮播） -->
-     <div class="banner">
-         <div class="slides">
-             <!-- 【图片提示】：替换为轮播图1的图片链接 -->
-             <div class="slide">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9e1xO.jpg" alt="轮播图1">
-             </div>
-             <!-- 【图片提示】：替换为轮播图2的图片链接 -->
-             <div class="slide">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9eSVs.png" alt="轮播图2">
-             </div>
-             <!-- 【图片提示】：替换为轮播图3的图片链接 -->
-             <div class="slide">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9eEMF.png" alt="轮播图3">
-             </div>
+     <!-- 微信客服弹窗 -->
+     <div class="customer-modal" id="customerModal">
+         <div class="modal-header">
+             <h3 class="modal-title">微信客服</h3>
+             <div class="close-btn" onclick="closeCustomerModal()"></div>
          </div>
-         <div class="controls">
-             <div class="control active" data-index="0"></div>
-             <div class="control" data-index="1"></div>
-             <div class="control" data-index="2"></div>
-         </div>
-     </div>
-     <div class="audio-bar">
-         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="currentColor"/>
-         </svg>
-         <div class="audio-text">提示内容 示例内容 示例内容 提示内容 示例内容 示例内容</div>
-     </div>
-     <div class="nav-tabs">
-         <div class="tab-btn active" data-tab="tab1">商城</div>
-         <div class="tab-btn" data-tab="tab2">免费下载</div>
-         <div class="tab-btn" data-tab="tab3">分类3</div>
-     </div>
-     <div class="content-list tab-content active" id="tab1">
-         <div class="list-item">
-             <!-- 【图片提示】：替换为“易诺商城入口”的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9VpLj.jpg" alt="易诺商城入口LOGO">
+         <div class="modal-content">
+             <!-- 微信客服区块 -->
+             <div class="service-block">
+                 <div class="service-content">
+                     <div class="service-icon wechat-icon">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M20 4.5C20 5.32843 19.5523 6.09868 18.8166 6.66437L12 11.5888L5.1834 6.66437C4.4477 6.09868 4 5.32843 4 4.5V4.5C4 3.67157 4.4477 2.90132 5.1834 2.33563L12 7.26016L18.8166 2.33563C19.5523 2.90132 20 3.67157 20 4.5V4.5Z" fill="white"/>
+                             <path d="M12 13.2588L6.1834 8.13437C5.4477 8.70006 5 9.47031 5 10.25V10.25C5 11.0297 5.4477 11.8 6.1834 12.3656L12 17.2902L17.8166 12.3656C18.5523 11.8 19 11.0297 19 10.25V10.25C19 9.47031 18.5523 8.70006 17.8166 8.13437L12 13.2588Z" fill="white"/>
+                         </svg>
+                     </div>
+                     <div class="service-text">
+                         <div class="service-title">微信客服</div>
+                         <div class="service-desc" id="wechat-desc">yinuo_kefu</div>
+                         <button class="copy-btn" onclick="copyToClipboard('wechat-desc')">复制微信号</button>
+                     </div>
+                 </div>
              </div>
-             <div class="item-info">
-                 <!-- 【项目名称】：已改为“易诺商城入口” -->
-                 <div class="item-title">项目名称1</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
+             <!-- 微信下载区块 -->
+             <div class="service-block">
+                 <div class="service-content">
+                     <div class="service-icon download-icon">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M19 9L14 14L11 11L16 6L19 9ZM5 19H19V5H5V19Z" fill="white"/>
+                         </svg>
+                     </div>
+                     <div class="service-text">
+                         <div class="service-title">微信下载</div>
+                         <div class="service-desc" id="download-desc">weixin.qq.com</div>
+                         <button class="copy-btn" onclick="copyToClipboard('download-desc')">复制链接</button>
+                     </div>
+                 </div>
              </div>
-             <!-- 【链接提示】：替换为“易诺商城入口”的下载/跳转链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的易诺商城入口链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-         <div class="list-item">
-             <!-- 【图片提示】：替换为“易诺云商城”的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9VpLj.jpg" alt="易诺云商城LOGO">
-             </div>
-             <div class="item-info">
-                 <!-- 【项目名称】：已改为“易诺云商城” -->
-                 <div class="item-title">易诺云商城</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为“易诺云商城”的下载/跳转链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的易诺云商城链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-         <div class="list-item">
-             <!-- 【图片提示】：替换为项目3的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://via.placeholder.com/80" alt="项目LOGO">
-             </div>
-             <div class="item-info">
-                 <div class="item-title">项目名称3</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为项目3的下载链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的项目3链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-     </div>
-     <div class="content-list tab-content" id="tab2">
-         <div class="list-item">
-             <!-- 【图片提示】：替换为项目4的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9VCes.jpg" alt="项目LOGO">
-             </div>
-             <div class="item-info">
-                 <div class="item-title">TestFlight下载</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为项目4的下载链接 -->
-             <button class="download-btn" onclick="window.location.href='https://apps.apple.com/cn/app/testflight/id899247664'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-         <div class="list-item">
-             <!-- 【图片提示】：替换为项目5的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://s21.ax1x.com/2025/11/09/pZ9VZSU.png" alt="项目LOGO">
-             </div>
-             <div class="item-info">
-                 <div class="item-title">微信分身</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为项目5的下载链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的项目5链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-     </div>
-     <div class="content-list tab-content" id="tab3">
-         <div class="list-item">
-             <!-- 【图片提示】：替换为项目6的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://via.placeholder.com/80" alt="项目LOGO">
-             </div>
-             <div class="item-info">
-                 <div class="item-title">项目名称6</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为项目6的下载链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的项目6链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-         <div class="list-item">
-             <!-- 【图片提示】：替换为项目7的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://via.placeholder.com/80" alt="项目LOGO">
-             </div>
-             <div class="item-info">
-                 <div class="item-title">项目名称7</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为项目7的下载链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的项目7链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
-         </div>
-         <div class="list-item">
-             <!-- 【图片提示】：替换为项目8的LOGO图片链接 -->
-             <div class="item-logo">
-                 <img src="https://via.placeholder.com/80" alt="项目LOGO">
-             </div>
-             <div class="item-info">
-                 <div class="item-title">项目名称8</div>
-                 <div class="item-desc">项目描述 示例描述 示例描述</div>
-             </div>
-             <!-- 【链接提示】：替换为项目8的下载链接 -->
-             <button class="download-btn" onclick="window.location.href='https://你的项目8链接.com'">
-                 立即下载
-                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/>
-                 </svg>
-             </button>
          </div>
      </div>
      <script>
-     // 轮播图逻辑
-         const slides = document.querySelector('.banner .slides');
-         const controls = document.querySelectorAll('.banner .control');
+         // 页面加载时显示弹窗公告
+         window.onload = function() {
+             document.getElementById('announcementModal').style.display = 'flex';
+         }
+         // 关闭弹窗公告
+         function closeAnnouncement() {
+             document.getElementById('announcementModal').style.display = 'none';
+         }
+         // 轮播图功能
+         const carouselContainer = document.getElementById('carouselContainer');
          let currentIndex = 0;
-         const slideCount = controls.length;
-         const slideWidth = 100; // 百分比
-         let interval;
+         const totalItems = 2;
+         function goToIndex(index) {
+             currentIndex = index;
+             carouselContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+         }
          // 自动轮播
-         function startAutoPlay() {
-             interval = setInterval(() => {
-                 currentIndex = (currentIndex + 1) % slideCount;
-                 updateSlide();
-             }, 5000); // 5秒切换一次
-         }
-         // 手动切换
-         controls.forEach(control => {
-             control.addEventListener('click', () => {
-                 clearInterval(interval);
-                 currentIndex = parseInt(control.getAttribute('data-index'));
-                 updateSlide();
-                 startAutoPlay();
-             });
-         });
-         // 更新轮播图
-         function updateSlide() {
-             slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
-             controls.forEach((control, index) => {
-                 control.classList.toggle('active', index === currentIndex);
-             });
-         }
-         // 分类切换逻辑
+         setInterval(() => {
+             currentIndex = (currentIndex + 1) % totalItems;
+             goToIndex(currentIndex);
+         }, 5000);
+         // 导航标签切换
          const tabBtns = document.querySelectorAll('.tab-btn');
-         const tabContents = document.querySelectorAll('.tab-content');
-         tabBtns.forEach(btn => {
+         const tabContents = [
+             document.querySelector('.content-list'),
+             document.getElementById('tab2'),
+             document.getElementById('tab3')
+         ];
+         tabBtns.forEach((btn, index) => {
              btn.addEventListener('click', () => {
-                 const tabId = btn.getAttribute('data-tab');
                  tabBtns.forEach(b => b.classList.remove('active'));
-                 tabContents.forEach(c => c.classList.remove('active'));
+                 tabContents.forEach(c => c.style.display = 'none');
                  btn.classList.add('active');
-                 document.getElementById(tabId).classList.add('active');
+                 tabContents[index].style.display = 'block';
              });
          });
-         // 初始化轮播
-         startAutoPlay();
-         
-        
+         // 客服弹窗控制
+         function openCustomerModal() {
+             document.getElementById('customerModal').style.display = 'block';
+             document.body.style.overflow = 'hidden';
+         }
+         function closeCustomerModal() {
+             document.getElementById('customerModal').style.display = 'none';
+             document.body.style.overflow = 'auto';
+         }
+         // 点击背景关闭弹窗
+         document.getElementById('customerModal').addEventListener('click', function(e) {
+             if (e.target === this) {
+                 closeCustomerModal();
+             }
+         });
+         // 复制功能
+         function copyToClipboard(elementId) {
+             const text = document.getElementById(elementId).innerText;
+             navigator.clipboard.writeText(text).then(() => {
+                 alert('已复制到剪贴板');
+             }).catch(err => {
+                 console.error('复制失败: ', err);
+             });
+         }
      </script>
  </body>
  </html>
